@@ -18,10 +18,28 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Setup Session Middleware
-const FileStore = require('session-file-store')(session);
+class JsonStore extends session.Store {
+    constructor() {
+        super();
+        this.path = path.join(__dirname, 'data.json');
+        this.sessions = {};
+        if (fs.existsSync(this.path)) {
+            try { this.sessions = JSON.parse(fs.readFileSync(this.path, 'utf8')); } catch (e) { }
+        }
+    }
+    get(sid, cb) { cb(null, this.sessions[sid] || null); }
+    set(sid, sess, cb) {
+        this.sessions[sid] = sess;
+        fs.writeFile(this.path, JSON.stringify(this.sessions), (err) => { if (cb) cb(err); });
+    }
+    destroy(sid, cb) {
+        delete this.sessions[sid];
+        fs.writeFile(this.path, JSON.stringify(this.sessions), (err) => { if (cb) cb(err); });
+    }
+}
 
 const sessionMiddleware = session({
-    store: new FileStore({ path: './sessions' }),
+    store: new JsonStore(),
     secret: process.env.SESSION_SECRET || 'super_secure_secret_key',
     resave: false,
     saveUninitialized: true,
