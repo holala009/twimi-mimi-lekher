@@ -198,9 +198,16 @@ io.on('connection', (socket) => {
     console.log('A client connected:', socket.id);
 
     // Get visitor IP
-    // Depending on reverse proxy setup, this might be socket.handshake.headers['x-forwarded-for']
-    let clientIp = socket.handshake.address;
-    if (clientIp === '::1' || clientIp === '::ffff:127.0.0.1') {
+    // Railway and other platforms use x-forwarded-for to pass the real IP
+    let forwardedFor = socket.handshake.headers['x-forwarded-for'];
+    let clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : socket.handshake.address;
+
+    // Strip IPv6 to IPv4 mapping prefix if present
+    if (clientIp.startsWith('::ffff:')) {
+        clientIp = clientIp.substring(7);
+    }
+
+    if (clientIp === '::1' || clientIp === '127.0.0.1') {
         clientIp = '127.0.0.1'; // Localhost fallback
     }
 
