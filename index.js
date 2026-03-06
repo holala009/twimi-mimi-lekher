@@ -18,10 +18,13 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Setup Session Middleware
+const FileStore = require('session-file-store')(session);
+
 const sessionMiddleware = session({
+    store: new FileStore({ path: './sessions' }),
     secret: process.env.SESSION_SECRET || 'super_secure_secret_key',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 } // 1 day cookie
 });
 
