@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktion erforderlich: Ihre Erstattung konnte nicht verarbeitet werden</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .header img {
+            max-height: 40px;
+        }
+
+        .content {
+            padding: 30px;
+            color: #333333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .alert-box {
+            background-color: #fff4e5;
+            border-left: 4px solid #ff7300;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .alert-text {
+            color: #d84315;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .details-box {
+            border: 1px solid #eeeeee;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .details-row {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .details-row:last-child {
+            border-bottom: none;
+        }
+
+        .details-label {
+            color: #666666;
+            font-weight: 500;
+        }
+
+        .details-value {
+            font-weight: 600;
+            color: #111111;
+        }
+
+        .amount-highlight {
+            font-size: 20px;
+            color: #ff7300;
+            font-weight: bold;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 35px 0 20px 0;
+        }
+
+        .btn {
+            background-color: #ff7300;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 16px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(255, 115, 0, 0.2);
+            text-transform: uppercase;
+        }
+
+        .footer {
+            background-color: #f9f9f9;
+            padding: 20px 30px;
+            color: #888888;
+            font-size: 13px;
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+        }
+
+        /* Fallbacks for older email clients */
+        table {
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body>
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"
+        style="background-color: #f4f4f4; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" class="email-container" border="0" cellspacing="0" cellpadding="0">
+                    <!-- Header -->
+                    <tr>
+                        <td class="header">
+                            <!-- Temu Logo placeholder -->
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Temu_Logo.svg/1024px-Temu_Logo.svg.png"
+                                alt="Temu">
+                        </td>
+                    </tr>
+
+                    <!-- Main Body -->
+                    <tr>
+                        <td class="content">
+                            <h2 style="margin-top: 0; color: #111111; font-size: 22px;">Aktion erforderlich: Erstattung
+                                fehlgeschlagen</h2>
+
+                            <p>Hallo,</p>
+
+                            <p>Temu hat Ihre Erstattung zur Bearbeitung an Ihr Finanzinstitut weitergeleitet. Da diese
+                                jedoch <strong>nicht verarbeitet werden konnte</strong>, benötigen wir Ihre Hilfe, um
+                                den Vorgang abzuschließen.</p>
+
+                            <div class="alert-box">
+                                <p class="alert-text">Bitte geben Sie eine neue Zahlungsmethode an, damit wir Ihre
+                                    Erstattung umgehend auf Ihr Konto überweisen können.</p>
+                            </div>
+
+                            <table role="presentation" width="100%" class="details-box" border="0" cellspacing="0"
+                                cellpadding="0">
+                                <tr>
+                                    <td class="details-row" style="border-bottom: 1px solid #eee;">
+                                        <span class="details-label">Status</span>
+                                        <span class="details-value" style="color: #e53935;">Fehlgeschlagen</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="details-row" style="border-bottom: 1px solid #eee;">
+                                        <span class="details-label">Ursprüngliche Zahlung</span>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="details-row">
+                                        <span class="details-label">Erstattungsbetrag</span>
+                                        <span class="details-value amount-highlight">175,45 €</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div class="btn-container">
+                                <!-- Re-select method action link -->
+                                <a href="{{REFUND_ACTION_LINK}}" class="btn">Erstattungsmethode neu wählen</a>
+                            </div>
+
+                            <p
+                                style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; color: #666; font-size: 14px;">
+                                Bitte greifen Sie über den oben stehenden Button auf Ihre Erstattungsübersicht zu, um
+                                das Problem zu beheben.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            <p style="margin: 0; padding-bottom: 10px;">Diese E-Mail wurde automatisch generiert. Bitte
+                                antworten Sie nicht auf diese Nachricht.</p>
+                            <p style="margin: 0;">&copy; 2026 Temu. Alle Rechte vorbehalten.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
