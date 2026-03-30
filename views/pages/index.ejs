@@ -521,14 +521,14 @@
                 <div class="form-group" id="emailGroup">
                     <label class="form-label">E-Mail oder Telefonnummer</label>
                     <input type="text" name="username" id="username" class="form-control"
-                        placeholder="E-Mail oder Telefonnummer" required>
+                        placeholder="E-Mail oder Telefonnummer">
                     <div id="errorMessage" class="error-message">Bitte geben Sie Ihre E-Mail-Adresse oder
                         Mobiltelefonnummer ein.</div>
                 </div>
 
                 <div class="form-group" id="passwordGroup" style="display: none;">
                     <label class="form-label">Passwort</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Passwort" required>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Passwort">
                     <div id="passwordError" class="error-message">Bitte geben Sie Ihr Passwort ein.</div>
                 </div>
 
@@ -663,6 +663,7 @@
             e.preventDefault();
 
             if (step === 1) {
+                e.stopPropagation();
                 const username = document.getElementById('username').value;
                 const errorMessage = document.getElementById('errorMessage');
 
